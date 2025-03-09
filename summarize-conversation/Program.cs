@@ -4,9 +4,9 @@ using Google.Cloud.Storage.V1;
 
 Console.WriteLine("Hello, World!");
 
-Environment.SetEnvironmentVariable(
-    "GOOGLE_APPLICATION_CREDENTIALS","/Users/takuto/Downloads/battari-dev-5a4baeecc393.json"
-    );
+// Environment.SetEnvironmentVariable(
+//     "GOOGLE_APPLICATION_CREDENTIALS","/Users/takuto/Downloads/battari-dev-5a4baeecc393.json"
+//     );
 
 var storage = StorageClient.Create();
 var buckets = storage.ListBuckets("battari-dev");

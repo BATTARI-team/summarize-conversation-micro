@@ -1,0 +1,14 @@
+﻿services:
+  webapplication1:
+    image: webapplication1
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /etc/cred/google-credentials.json
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - /etc/cred:/etc/cred

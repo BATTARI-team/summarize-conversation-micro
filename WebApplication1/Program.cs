@@ -1,8 +1,8 @@
 var builder = WebApplication.CreateBuilder(args);
 
-Environment.SetEnvironmentVariable(
-    "GOOGLE_APPLICATION_CREDENTIALS","/Users/takuto/Downloads/battari-dev-5a4baeecc393.json"
-    );
+// Environment.SetEnvironmentVariable(
+//     "GOOGLE_APPLICATION_CREDENTIALS","/Users/takuto/Downloads/battari-dev-5a4baeecc393.json"
+// );
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
