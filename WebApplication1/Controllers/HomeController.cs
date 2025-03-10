@@ -8,6 +8,7 @@ using System.Text.Json;
 using Whisper.net.Logger;
 using OpenAI;
 using OpenAI.Chat;
+using System.Text;
 
 namespace WebApplication1.Controllers;
 
@@ -45,7 +46,8 @@ public class HomeController : Controller
         var ffmpeg = new ProcessStartInfo();
 
         // ffmpeg.FileName = "/usr/local/bin/ffmpeg";
-        ffmpeg.FileName = "/usr/bin/ffmpeg";
+        // ffmpeg.FileName = "/usr/bin/ffmpeg";
+        ffmpeg.FileName = "/opt/homebrew/bin/ffmpeg";
         ffmpeg.Arguments = "-i " + localPath + " -ac 1 -ar 16000 " + localPath + ".wav";
         ffmpeg.UseShellExecute = false;
         ffmpeg.RedirectStandardOutput = true;
@@ -57,6 +59,27 @@ public class HomeController : Controller
         {
             var keywordJson = JsonSerializer.Deserialize<Dictionary<String, String>>(keyword);
             var word = keywordJson["word"];
+            var sid = fileName.Split("_")[0];
+            HttpClient httpClient = new HttpClient();
+            using StringContent content = new(
+                JsonSerializer.Serialize(new{
+                    sid = sid,
+                    keyword = word
+                }),
+                Encoding.UTF8,
+                "application/json"
+            );
+            HttpRequestMessage requestMessage = new HttpRequestMessage(HttpMethod.Post, $"{Environment.GetEnvironmentVariable("MAIN_BACKEND_URL")}/SummarizeConversation/PutSummarizationResult");
+            requestMessage.Content = content;
+
+            HttpResponseMessage message = await httpClient.SendAsync(requestMessage);
+            try {
+                message.EnsureSuccessStatusCode();
+            }catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
             return word;
         }
         catch (Exception e)
@@ -118,6 +141,7 @@ public class HomeController : Controller
 }}
 ";
         ChatCompletion completion = client.CompleteChat(prompt);
+        
         return completion.Content[0].Text;
     }
     private static async Task DownloadModel(string fileName, GgmlType ggmlType)
